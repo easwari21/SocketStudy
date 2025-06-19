@@ -61,27 +61,28 @@ REG.NO :  212223240033
 ## Client
 ```
 import socket
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect(('127.0.0.1', 65432))
-client_socket.sendall(b"Hello from Client!")  
-data = client_socket.recv(1024)  
-print(f"Server says: {data.decode()}")  
-client_socket.close()
+s = socket.socket()
+s.connect(('localhost', 8000))     
+s.send(b"Hello from client!")      
+data = s.recv(1024)               
+print("Received from server:", data.decode())
+s.close()
 ```
 
 ## Server
 ```
 import socket
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(('127.0.0.1', 65432))
-server_socket.listen()
-print("Waiting for a client to connect...")
-conn, addr = server_socket.accept()
+s = socket.socket()                
+s.bind(('localhost', 8000))        
+s.listen(1)                        
+print("🔌 Server is listening on port 8000...")
+conn, addr = s.accept()           
 print(f"Connected by {addr}")
-data = conn.recv(1024)  # Hear what the client says
-print(f"Client says: {data.decode()}") 
-conn.sendall(b"Hello from Server!")  
+data = conn.recv(1024)             
+print("Received:", data.decode())
+conn.send(b"Hello from server!")  
 conn.close()
+s.close()
 ```
 ## Output:
 ## Client
